@@ -9,4 +9,5 @@ An Open Source Image distortion telegram bot based on @DistortBot &lt;On telegra
 
 - **Credits**  
   @Mezgrman (Owner of the original bot which this bot is based of. He also helped me in making!)
+  
   @rupansh (that me tho lul)
