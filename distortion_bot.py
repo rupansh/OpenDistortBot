@@ -21,7 +21,7 @@ The source is available at - https://github.com/rupansh/OpenDistortBot""")
 
 @bot.message_handler(commands=['help'])
 def send_help(message):
-    bot.reply_to(message, "Send me an image to distort it! Your photos aren't stored! To prevent server from hitting its limit, the photo is downscaled to 320x320")
+    bot.reply_to(message, "Send me an image to distort it! Your photos are delted after the distortion is complete! To prevent server from hitting its limit, the photo is downscaled to 320x320")
 
 
 @bot.message_handler(content_types=['photo'])
