@@ -1,41 +1,63 @@
-import telebot
+from aiogram import Bot, types
+from aiogram.dispatcher import Dispatcher
+from aiogram.utils import executor
+
+from io import BytesIO
+from glob import glob
 import os
+from PIL import Image
 import random
 
-TOKEN = "ENTER_YOUR_TOKEN"
-bot = telebot.TeleBot(TOKEN)
+TOKEN = "ENTER YOUR TOKEN"
 
-user = bot.get_me()
+bot = Bot(token=TOKEN)
+dp = Dispatcher(bot)
+
 
 def distort(fname):
-    boi = "convert "+fname+" -liquid-rescale 320x320 -implode 0.30 result/"+fname
-    os.system(boi)
+    image = Image.open(fname)
+    imgdimens = image.width, image.height
+    distortcmd = f"magick {fname} -liquid-rescale 60x60%! -resize {imgdimens[0]}x{imgdimens[1]}\! result/{fname}"
+
+    os.system(distortcmd)
+
+    buf = BytesIO()
+    buf.name = 'image.jpeg'
+
+    image = Image.open(f"result/{fname}")
+    filetype = "JPEG" if fname.endswith(".jpg") else "PNG"
+    image.save(buf, filetype)
+
+    buf.seek(0)
+
+    return buf
 
 
-@bot.message_handler(commands=['start'])
-def send_welcome(message):
-    bot.reply_to(message, """Hey! This is a bot based on the distortion bot(@DistortBot). Since its not open source, I decided to make an open
-source version. Currently it only supports distorting image and it doesn't have power control (yet).
-The source is available at - https://github.com/rupansh/OpenDistortBot""")
+@dp.message_handler(commands=['start', 'help'])
+async def send_welcome(message: types.Message):
+    await message.reply("This is a bot based on the distortion bot(@DistortBot). Since its not open source, "
+                        "I decided to make an open source verison")
 
 
-@bot.message_handler(commands=['help'])
-def send_help(message):
-    bot.reply_to(message, "Send me an image to distort it! Your photos are deleted after the distortion is complete! To prevent server from hitting its limit, the photo is downscaled to 320x320")
+@dp.message_handler(commands=['distort'])
+async def dodistort(message):
+    for distorted in glob("distorted*"):
+        os.remove(distorted)
+    for findistorted in glob("*/distorted*"):
+        os.remove(findistorted)
+
+    if message.reply_to_message.photo or message.reply_to_message.sticker:
+        img = await message.reply_to_message.photo[-1].get_file() if message.reply_to_message.photo \
+            else await message.reply_to_message.sticker.get_file()
+        imgname = f"distorted{random.randint(1, 100)}"
+        imgname += ".jpg" if message.reply_to_message.photo \
+            else ".png"
+
+        await img.download(imgname)
+
+        distort(imgname)
+        await message.reply_photo(photo=distort(imgname), reply=message)
 
 
-@bot.message_handler(content_types=['photo'])
-def photudl(message):
-    file_info = bot.get_file(message.photo[-1].file_id)
-    download = bot.download_file(file_info.file_path)
-    file_name = str(random.randint(1,101))+".jpg"
-    with open(file_name, 'wb') as new_file:
-        new_file.write(download)
-    distort(file_name)
-    photo = open('result/'+file_name, 'rb')
-    bot.send_photo(message.chat.id, photo)
-    os.remove(file_name)
-    os.remove("result/"+file_name)
-
-
-bot.polling()
+if __name__ == '__main__':
+    executor.start_polling(dp)

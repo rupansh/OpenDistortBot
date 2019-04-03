@@ -1,13 +1,19 @@
 # OpenDistortBot
-An Open Source Image distortion telegram bot based on @DistortBot &lt;On telegram>
+An Open Source Image distortion telegram bot based on @DistortBot
 
-- **What is this?**  
-  A Telegram Bot that distorts images.(like my profile pic)
+**Usage :-**
+> python3.7 distortion_bot.py
 
-- **Can I use this?**  
-  Yes. Just enter the API Token that bot father gave you in TOKEN variable with double quotes
+**Requirements:-** 
+- aiogram
 
-- **Credits**  
-  @Mezgrman (Owner of the original bot which this bot is based of. He also helped me in making!)
-  
-  @rupansh (that me tho lul)
+# Prerequisites
+- **ImageMagick 7 with liblqr delegate:** 
+
+    Ubuntu's default ppa doesn't have IM7! You can build it from source [https://imagemagick.org/script/install-source.php](https://imagemagick.org/script/install-source.php). Before 
+    installing IM7 however, make sure you have installed liblqr-1.0-dev
+
+- **Python 3.7**(required for aiogram)
+
+# Credits
+@Mezgrman for original bot and helping me in making this one

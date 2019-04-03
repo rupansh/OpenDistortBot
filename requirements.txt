@@ -1,1 +1,1 @@
-pyTelegramBotAPI
+aiogram
