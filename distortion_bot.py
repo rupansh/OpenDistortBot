@@ -55,7 +55,6 @@ async def dodistort(message):
 
         await img.download(imgname)
 
-        distort(imgname)
         await message.reply_photo(photo=distort(imgname), reply=message)
 
 
