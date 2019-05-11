@@ -46,7 +46,7 @@ async def dodistort(message):
     for findistorted in glob("*/distorted*"):
         os.remove(findistorted)
 
-    if message.reply_to_message.photo or message.reply_to_message.sticker:
+    if message.reply_to_message and (message.reply_to_message.photo or message.reply_to_message.sticker):
         img = await message.reply_to_message.photo[-1].get_file() if message.reply_to_message.photo \
             else await message.reply_to_message.sticker.get_file()
         imgname = f"distorted{random.randint(1, 100)}"
