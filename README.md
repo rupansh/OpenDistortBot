@@ -3,8 +3,11 @@ An Open Source Image distortion telegram bot based on @DistortBot
 
 **Usage :-**
 > python3.7 distortion_bot.py
+
 > Send picture to the bot
+
 > Reply to your(or any) picture with /distort
+
 > Receive distorted version of the picture you replied to
 
 **Requirements:-** 
